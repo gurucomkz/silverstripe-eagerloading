@@ -1,0 +1,8 @@
+SilverStripe\ORM\DataList:
+  extensions:
+    - Gurucomkz\EagerLoading\DataFilterEagerLoadingExtension
+
+
+SilverStripe\Admin\ModelAdmin:
+  extensions:
+    - Gurucomkz\EagerLoading\ModelAdminExtension
