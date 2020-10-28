@@ -1,4 +1,4 @@
-# Silverstripe EagerLoading
+# Silverstripe EagerLoading (UNSTABLE)
 
 Attempt to solve [N+1 problem](https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping) in SilverStripe 4.
 
