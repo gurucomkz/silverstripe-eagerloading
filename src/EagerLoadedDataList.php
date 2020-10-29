@@ -102,10 +102,10 @@ class EagerLoadedDataList extends DataList{
             $this->_prepareCache($hasManys, $withHasManys);
             $this->eagerLoadHasMany($data, $hasManys, $withHasManys);
         }
-        // if(count($withManyManys)){
-        //     $this->_prepareCache($manyManys, $withManyManys);
-        //     $this->eagerLoadManyMany($data, $manyManys, $withManyManys);
-        // }
+        if(count($withManyManys)){
+            $this->_prepareCache($manyManys, $withManyManys);
+            $this->eagerLoadManyMany($data, $manyManys, $withManyManys);
+        }
 
     }
 
@@ -204,42 +204,42 @@ class EagerLoadedDataList extends DataList{
 
             $component = $schema->manyManyComponent($localClass, $dep);
 
+            $descriptor = [
+                'class' => $depClass,
+                'map' => [],
+            ];
+
             $idsQuery = SQLSelect::create(
                 implode(',',[$component['childField'],$component['parentField']]),
                 $component['join'],
                 [
-                    $component['parentField'].' IN (' . implode(',',array_keys($data)).')'
+                    $component['parentField'].' IN (' . implode(',',$data).')'
                 ]
                 )->execute();
 
-            $dep2local = [];
+            $collection = [];
+            $relListReverted = [];
             foreach($idsQuery as $row){
-                $_k = $row[$component['childField']];
-                if(!isset($dep2local[$_k])) $dep2local[$_k] = [];
-                $dep2local[$_k][] = $row[$component['parentField']];
+                $relID = $row[$component['childField']];
+                $localID = $row[$component['parentField']];
+                if(!isset($collection[$localID])) $collection[$localID] = [];
+                $collection[$localID][] = $relID;
+                $relListReverted[$relID] = 1;//use ids as keys to avoid
             }
 
-            $result = DataObject::get($depClass)->filter('ID',array_keys($dep2local));
+            $result = DataObject::get($depClass)->filter('ID',array_keys($relListReverted));
             if(count($depSeq)>1){
                 $result = $result
                     ->with(implode('.',array_slice($depSeq,1)));
             }
 
-            $localCollections = [];
-            foreach($data as $localRecord){
-                $localCollections[$localRecord->ID] = [];
-            }
             foreach($result as $depRecord) {
                 $this->_relatedCache[$depClass][$depRecord->ID] = $depRecord;
-                foreach($dep2local[$depRecord->ID] as $localID){
-                    $localCollections[$localID][] = $depRecord;
-                }
             }
 
-            $fn = "set$dep";
-            foreach($data as &$localRecord){
-                $localRecord->$fn($localCollections[$localRecord->ID]);
-            }
+            $descriptor['map'] = $collection;
+            $this->_relatedMaps['has_many'][$dep] = $descriptor;
+
         }
 
     }
@@ -271,8 +271,24 @@ class EagerLoadedDataList extends DataList{
                     }
                 }
             }
-            $fn = "set$dep";
-            $item->$fn($collection);
+            $item->addEagerRelation($dep, $collection);
+        }
+
+        foreach($this->_relatedMaps['many_many'] as $dep => $depInfo){
+            $depClass = $depInfo['class'];
+            $collection = [];
+            if(isset($depInfo['map'][$item->ID])){
+                foreach($depInfo['map'][$item->ID] as $depIDlist){
+                    foreach($depIDlist as $depID){
+                        if(isset($this->_relatedCache[$depClass][$depID]))
+                        {
+                            $depRecord = $this->_relatedCache[$depClass][$depID];
+                            $collection[] = $depRecord;
+                        }
+                    }
+                }
+            }
+            $item->addEagerRelation($dep, $collection);
         }
 
     }

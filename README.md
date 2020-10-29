@@ -13,22 +13,16 @@ This will result in the final DataList to be presented by the `EagerLoadedDataLi
 The module takes advantange of `DataList::getGenerator()` to query for and attach the related records only when needed.
 
 Currently supports only HasOne & HasMany
-For HasMany REQUIRES a 'RelationName()' & 'setRelationName()' functions explicitly declared as advised by https://github.com/unclecheese/silverstripe-eager-loader:
+For HasMany/ManyMany - add the following code into your DataObjects where required:
 ```php
-public function setAttendees(array $attendees)
+public function __call($method, $arguments)
 {
-	$this->cachedAttendees = ArrayList::create($attendees);
-
-	return $this;
-}
-
-public function Attendees()
-{
-	if ($this->cachedAttendees) {
-		return $this->cachedAttendees;
-	}
-
-	return parent::Attendees();
+    if($method !== 'tryEagerLoadingRelation'){
+        if(null !== ($eagerResult = $this->tryEagerLoadingRelation($method))) {
+            return $eagerResult;
+        }
+    }
+    return parent::__call($method, $arguments);
 }
 ```
 
