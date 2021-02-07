@@ -13,16 +13,12 @@ This will result in the final DataList to be presented by the `EagerLoadedDataLi
 The module takes advantange of `DataList::getGenerator()` to query for and attach the related records only when needed.
 
 Currently supports only HasOne & HasMany
-For HasMany/ManyMany - add the following code into your DataObjects where required:
+For HasMany/ManyMany - add the following trait to your models:
 ```php
-public function __call($method, $arguments)
-{
-    if($method !== 'tryEagerLoadingRelation'){
-        if(null !== ($eagerResult = $this->tryEagerLoadingRelation($method))) {
-            return $eagerResult;
-        }
-    }
-    return parent::__call($method, $arguments);
+class MyClass extends DataObject {
+    use Gurucomkz\EagerLoading\EagerLoaderMultiAccessor;
+
+    // ...
 }
 ```
 
