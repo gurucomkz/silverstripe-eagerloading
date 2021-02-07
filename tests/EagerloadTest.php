@@ -30,7 +30,7 @@ class EagerloadTest extends SapphireTest
         $players = Player::get()->with('Team');
 
         foreach($players as $player) {
-            $team = $player->Team->Title;
+            $player->Team->Title;
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
@@ -46,7 +46,7 @@ class EagerloadTest extends SapphireTest
         $teams = Team::get()->with('Players');
 
         foreach($teams as $team) {
-            $players = $team->Players()->map()->toArray();
+            $team->Players()->map()->toArray();
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
@@ -62,7 +62,7 @@ class EagerloadTest extends SapphireTest
         $players = Player::get()->with('Listens');
 
         foreach($players as $player) {
-            $music = $player->Listens()->map()->toArray();
+            $player->Listens()->map()->toArray();
             // print_r($music);
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
@@ -97,8 +97,8 @@ class EagerloadTest extends SapphireTest
         $players = Player::get()->with(['Team','Origin']);
 
         foreach($players as $player) {
-            $team = $player->Team->Title;
-            $origin = $player->Origin->Title;
+            $player->Team->Title;
+            $player->Origin->Title;
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
@@ -116,7 +116,7 @@ class EagerloadTest extends SapphireTest
         $players = Player::get()->with(['Team.Origin']);
 
         foreach($players as $player) {
-            $team = $player->Team->Origin->Title;
+            $player->Team->Origin->Title;
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
@@ -134,7 +134,7 @@ class EagerloadTest extends SapphireTest
         $players = Player::get()->with(['Team.Players']);
 
         foreach($players as $player) {
-            $team = $player->Team->Players()->map()->toArray();
+            $player->Team->Players()->map()->toArray();
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
