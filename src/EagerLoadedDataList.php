@@ -73,6 +73,8 @@ class EagerLoadedDataList extends DataList{
         return $item;
     }
 
+    private $relationsPrepared = false;
+
     public function prepareEagerRelations() {
         if($this->relationsPrepared) return;
         $this->relationsPrepared = true;
