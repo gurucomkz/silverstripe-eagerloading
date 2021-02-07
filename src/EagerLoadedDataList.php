@@ -40,24 +40,6 @@ class EagerLoadedDataList extends DataList{
         return $clone;
     }
 
-    public static function extractField($arr,$field)
-    {
-        $result = [];
-        foreach($arr as $record){
-            $result[is_object($record) ? $record->ID : $record['ID']] = is_object($record) ? $record->$field : $record[$field];
-        }
-        return $result;
-    }
-    public static function reverseMap($arr)
-    {
-        $result = [];
-        foreach($arr as $k => $v){
-            if(!isset($result[$v])) $result[$v] = [];
-            $result[$v][] = $k;
-        }
-        return $result;
-    }
-
     /**
      * Create a DataObject from the given SQL row
      *
@@ -123,7 +105,7 @@ class EagerLoadedDataList extends DataList{
         }
         $table = Config::forClass($this->dataClass)->get('table_name');
         $data = new SQLSelect(implode(',',$fields),[$table],["ID IN (".implode(',',$ids).")"]);
-        $data = self::EnsureArray($data->execute(),'ID');
+        $data = Utils::EnsureArray($data->execute(),'ID');
 
         foreach($withHasOnes as $depSeq) {
             $dep = $depSeq[0];
@@ -137,7 +119,7 @@ class EagerLoadedDataList extends DataList{
 
             $component = $schema->hasOneComponent($this->dataClass, $dep);
 
-            $descriptor['map'] = self::extractField($data,$descriptor['localField']);
+            $descriptor['map'] = Utils::extractField($data,$descriptor['localField']);
             $uniqueIDs = array_unique($descriptor['map']);
             while(count($uniqueIDs)) {
                 $IDsubset = array_splice($uniqueIDs,0,self::ID_LIMIT);
@@ -324,18 +306,5 @@ class EagerLoadedDataList extends DataList{
     }
 
 
-    public static function EnsureArray($arr, $kfield = null)
-    {
-        if(is_array($arr)) return $arr;
-        $result = [];
-        foreach($arr as $k => $v){
-            $key = $k;
-            if($kfield!==null) {
-                if(is_array($v) && isset($v[$kfield])) $key = $v[$kfield];
-                elseif(is_object($v) && isset($v->$kfield)) $key = $v->$kfield;
-            }
-            $result[$key] = $v;
-        }
-        return $result;
-    }
+
 }
