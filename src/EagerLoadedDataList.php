@@ -271,6 +271,9 @@ class EagerLoadedDataList extends DataList{
                     }
                 }
             }
+            if(!method_exists($item,'addEagerRelation')) {
+                throw new \Exception("Model {$item->ClassName} must include Gurucomkz\EagerLoading\EagerLoaderMultiAccessor trait to use eager loading for \$has_many");
+            }
             $item->addEagerRelation($dep, $collection);
         }
 
@@ -287,6 +290,9 @@ class EagerLoadedDataList extends DataList{
                         }
                     }
                 }
+            }
+            if(!method_exists($item,'addEagerRelation')) {
+                throw new \Exception("Model {$item->ClassName} must include Gurucomkz\EagerLoading\EagerLoaderMultiAccessor trait to use eager loading for \$many_many");
             }
             $item->addEagerRelation($dep, $collection);
         }

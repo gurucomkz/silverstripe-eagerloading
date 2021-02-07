@@ -10,10 +10,6 @@ After:
 SilverStripe\ORM\DataList:
   extensions:
     - Gurucomkz\EagerLoading\DataFilterEagerLoadingExtension
-SilverStripe\ORM\DataObject:
-  extensions:
-    - Gurucomkz\EagerLoading\DataObjectExtension
-
 
 SilverStripe\Admin\ModelAdmin:
   extensions:
