@@ -1,0 +1,15 @@
+---
+Name: eagerloading-test
+Before:
+  - 'mysite'
+  - 'app'
+After:
+  - '#framework'
+  - '#databaseconnectors'
+Only:
+  environment: 'dev'
+---
+# Proxy required to count queries
+TractorCow\SilverStripeProxyDB\ProxyDBFactory:
+  extensions:
+    - Gurucomkz\EagerLoading\ProxyDBCounterExtension

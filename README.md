@@ -28,3 +28,9 @@ You can declare `private static $eager_loading` in your model listing to leverag
 
 Additionally, it tries to detect the fact that you are doing the CSV Export and scans the `$export_fields` for suitable relations and loads them 
 in advance in attempt to speed up the export.
+
+## TODO
+* Detect 'LIMIT' constraints and load only relevant daya instead of all.
+* for `->with(['RelLevel1.RelLevel2'])` - do not query for `RelLevel1` IDs twice.
+* for `->with(['RelLevel1','RelLevel1.RelLevel2'])` - do not query for `RelLevel1` IDs thrice.
+* Handle `$belongs_many_many`

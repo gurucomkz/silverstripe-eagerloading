@@ -1,0 +1,69 @@
+Gurucomkz\EagerLoading\Tests\Models\Origin:
+  canterbury:
+    Title: Canterbury
+  wellington:
+    Title: Wellington
+  auckland:
+    Title: Auckland
+Gurucomkz\EagerLoading\Tests\Models\Team:
+  hurricanes:
+    Title: The Hurricanes
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+  crusaders:
+    Title: The Crusaders
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.canterbury
+  bears:
+    Title: The Bears
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.auckland
+Gurucomkz\EagerLoading\Tests\Models\Music:
+  pop:
+    Title: Pop
+  rnb:
+    Title: RnB
+  rap:
+    Title: Rap
+  classic:
+    Title: Classic
+Gurucomkz\EagerLoading\Tests\Models\Player:
+  john:
+    Title: John
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.hurricanes
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Listens:
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.rap
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
+  joe:
+    Title: Joe
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.crusaders
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Listens:
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
+  jack:
+    Title: Jack
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Listens:
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.classic
+  paul:
+    Title: Paul
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.hurricanes
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Listens:
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.classic
+  daniel:
+    Title: Daniel
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Listens:
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
+  patrik:
+    Title: Patrik
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Listens:
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
+      - =>Gurucomkz\EagerLoading\Tests\Models\Music.classic

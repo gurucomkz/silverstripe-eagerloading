@@ -15,9 +15,14 @@
     "require": {
         "silverstripe/framework": "^4.6"
     },
+    "require-dev": {
+        "jdorn/sql-formatter": "1.3.x-dev",
+        "tractorcow/silverstripe-proxy-db": "^0.1.0"
+    },
     "autoload": {
         "psr-4": {
-            "Gurucomkz\\EagerLoading\\": "src/"
+            "Gurucomkz\\EagerLoading\\": "src/",
+            "Gurucomkz\\EagerLoading\\Tests\\": "tests/"
         }
     },
     "extra": {
