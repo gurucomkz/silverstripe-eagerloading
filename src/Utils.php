@@ -10,7 +10,7 @@ class Utils {
             return $arr;
         }
         $result = [];
-        foreach ($arr as $k => $v){
+        foreach ($arr as $k => $v) {
             $key = $k;
             if ($kfield!==null) {
                 if (is_array($v) && isset($v[$kfield])) $key = $v[$kfield];
@@ -21,10 +21,10 @@ class Utils {
         return $result;
     }
 
-    public static function extractField($arr,$field)
+    public static function extractField($arr, $field)
     {
         $result = [];
-        foreach ($arr as $record){
+        foreach ($arr as $record) {
             $result[is_object($record) ? $record->ID : $record['ID']] = is_object($record) ? $record->$field : $record[$field];
         }
         return $result;

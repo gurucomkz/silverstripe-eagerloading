@@ -11,7 +11,7 @@ use SilverStripe\ORM\ArrayList;
 trait EagerLoaderMultiAccessor {
     public function __call($method, $arguments)
     {
-        if ($method !== 'tryEagerLoadingRelation'){
+        if ($method !== 'tryEagerLoadingRelation') {
             if (null !== ($eagerResult = $this->tryEagerLoadingRelation($method))) {
                 return $eagerResult;
             }

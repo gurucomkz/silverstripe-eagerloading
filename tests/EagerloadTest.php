@@ -29,12 +29,12 @@ class EagerloadTest extends SapphireTest
 
         $players = Player::get()->with('Team');
 
-        foreach($players as $player) {
+        foreach ($players as $player) {
             $player->Team->Title;
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
-        $this->assertEquals($pre_fetch_count + $expectedQueries,$post_fetch_count);
+        $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     }
 
     public function testHasMany()
@@ -45,12 +45,12 @@ class EagerloadTest extends SapphireTest
 
         $teams = Team::get()->with('Players');
 
-        foreach($teams as $team) {
+        foreach ($teams as $team) {
             $team->Players()->map()->toArray();
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
-        $this->assertEquals($pre_fetch_count + $expectedQueries,$post_fetch_count);
+        $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     }
 
     public function testManyMany()
@@ -61,13 +61,13 @@ class EagerloadTest extends SapphireTest
 
         $players = Player::get()->with('Listens');
 
-        foreach($players as $player) {
+        foreach ($players as $player) {
             $player->Listens()->map()->toArray();
             // print_r($music);
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
-        $this->assertEquals($pre_fetch_count + $expectedQueries,$post_fetch_count);
+        $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     }
 
     // public function testBelongsToManyMany()
@@ -78,14 +78,14 @@ class EagerloadTest extends SapphireTest
 
     //     $music = Music::get()->with('Players');
 
-    //     foreach($music as $genre) {
+    //     foreach ($music as $genre) {
     //         $players = $genre->Players()->map()->toArray();
     //     }
     //     $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
     //     // print_r(ProxyDBCounterExtension::getQueries());
 
-    //     $this->assertEquals($pre_fetch_count + $expectedQueries,$post_fetch_count);
+    //     $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     // }
 
     public function test2HasOne()
@@ -94,9 +94,9 @@ class EagerloadTest extends SapphireTest
         ProxyDBCounterExtension::resetQueries();
         $pre_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
-        $players = Player::get()->with(['Team','Origin']);
+        $players = Player::get()->with(['Team', 'Origin']);
 
-        foreach($players as $player) {
+        foreach ($players as $player) {
             $player->Team->Title;
             $player->Origin->Title;
         }
@@ -104,7 +104,7 @@ class EagerloadTest extends SapphireTest
 
         // print_r(ProxyDBCounterExtension::getQueries());
 
-        $this->assertEquals($pre_fetch_count + $expectedQueries,$post_fetch_count);
+        $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     }
 
     public function testHasOneChain()
@@ -115,14 +115,14 @@ class EagerloadTest extends SapphireTest
 
         $players = Player::get()->with(['Team.Origin']);
 
-        foreach($players as $player) {
+        foreach ($players as $player) {
             $player->Team->Origin->Title;
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
         // print_r(ProxyDBCounterExtension::getQueries());
 
-        $this->assertEquals($pre_fetch_count + $expectedQueries,$post_fetch_count);
+        $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     }
 
     public function testChainOneMany()
@@ -133,12 +133,12 @@ class EagerloadTest extends SapphireTest
 
         $players = Player::get()->with(['Team.Players']);
 
-        foreach($players as $player) {
+        foreach ($players as $player) {
             $player->Team->Players()->map()->toArray();
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
-        $this->assertEquals($pre_fetch_count + $expectedQueries,$post_fetch_count);
+        $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     }
 
 }

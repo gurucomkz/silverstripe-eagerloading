@@ -22,7 +22,7 @@ class EagerLoadedDataList extends DataList{
 
     public function __construct($classOrList)
     {
-        if(is_string($classOrList)) {
+        if (is_string($classOrList)) {
             parent::__construct($classOrList);
         } else {
             parent::__construct($classOrList->dataClass());
@@ -58,35 +58,35 @@ class EagerLoadedDataList extends DataList{
     private $relationsPrepared = false;
 
     public function prepareEagerRelations() {
-        if($this->relationsPrepared) return;
+        if ($this->relationsPrepared) return;
         $this->relationsPrepared = true;
         $localClass = $this->dataClass();
         $config = Config::forClass($localClass);
-        $hasOnes = (array)$config->get('has_one');
-        $hasManys = (array)$config->get('has_many');
-        $manyManys = (array)$config->get('many_many');
+        $hasOnes = (array) $config->get('has_one');
+        $hasManys = (array) $config->get('has_many');
+        $manyManys = (array) $config->get('many_many');
 
         //collect has_ones
-        $withHasOnes = array_filter($this->withList,function($dep)use($hasOnes){ return array_key_exists($dep[0],$hasOnes); });
-        $withHasManys = array_filter($this->withList,function($dep)use($hasManys){ return array_key_exists($dep[0],$hasManys); });
-        $withManyManys = array_filter($this->withList,function($dep)use($manyManys){ return array_key_exists($dep[0],$manyManys); });
+        $withHasOnes = array_filter($this->withList, function($dep)use($hasOnes) { return array_key_exists($dep[0], $hasOnes); });
+        $withHasManys = array_filter($this->withList, function($dep)use($hasManys) { return array_key_exists($dep[0], $hasManys); });
+        $withManyManys = array_filter($this->withList, function($dep)use($manyManys) { return array_key_exists($dep[0], $manyManys); });
 
-        if(!count($withHasOnes) && !count($withHasManys) && !count($withManyManys)){
+        if (!count($withHasOnes) && !count($withHasManys) && !count($withManyManys)) {
             // do nothing if no matches
             /** @todo report errors */
             return;
         }
 
         $data = $this->column('ID');
-        if(count($withHasOnes)){
+        if (count($withHasOnes)) {
             $this->_prepareCache($hasOnes, $withHasOnes);
             $this->eagerLoadHasOne($data, $hasOnes, $withHasOnes);
         }
-        if(count($withHasManys)){
+        if (count($withHasManys)) {
             $this->_prepareCache($hasManys, $withHasManys);
             $this->eagerLoadHasMany($data, $hasManys, $withHasManys);
         }
-        if(count($withManyManys)){
+        if (count($withManyManys)) {
             $this->_prepareCache($manyManys, $withManyManys);
             $this->eagerLoadManyMany($data, $manyManys, $withManyManys);
         }
@@ -99,15 +99,15 @@ class EagerLoadedDataList extends DataList{
 
         //collect required IDS
         $fields = ['ID'];
-        foreach($withHasOnes as $depSeq) {
+        foreach ($withHasOnes as $depSeq) {
             $dep = $depSeq[0];
             $fields[] = "{$dep}ID";
         }
         $table = Config::forClass($this->dataClass)->get('table_name');
-        $data = new SQLSelect(implode(',',$fields),[$table],["ID IN (".implode(',',$ids).")"]);
-        $data = Utils::EnsureArray($data->execute(),'ID');
+        $data = new SQLSelect(implode(',', $fields), [$table], ["ID IN (".implode(',', $ids).")"]);
+        $data = Utils::EnsureArray($data->execute(), 'ID');
 
-        foreach($withHasOnes as $depSeq) {
+        foreach ($withHasOnes as $depSeq) {
             $dep = $depSeq[0];
             $depClass = $hasOnes[$dep];
 
@@ -119,17 +119,17 @@ class EagerLoadedDataList extends DataList{
 
             $component = $schema->hasOneComponent($this->dataClass, $dep);
 
-            $descriptor['map'] = Utils::extractField($data,$descriptor['localField']);
+            $descriptor['map'] = Utils::extractField($data, $descriptor['localField']);
             $uniqueIDs = array_unique($descriptor['map']);
             while(count($uniqueIDs)) {
                 $IDsubset = array_splice($uniqueIDs,0,self::ID_LIMIT);
-                $result = DataObject::get($depClass)->filter('ID',$IDsubset);
-                if(count($depSeq)>1){
+                $result = DataObject::get($depClass)->filter('ID', $IDsubset);
+                if (count($depSeq)>1) {
                     $result = $result
-                        ->with(implode('.',array_slice($depSeq,1)));
+                        ->with(implode('.', array_slice($depSeq,1)));
                 }
 
-                foreach($result as $depRecord) {
+                foreach ($result as $depRecord) {
                     $this->_relatedCache[$depClass][$depRecord->ID] = $depRecord;
                 }
             }
@@ -142,9 +142,9 @@ class EagerLoadedDataList extends DataList{
     public function eagerLoadHasMany($data, $hasManys, $withHasManys)
     {
         $localClass = $this->dataClass();
-        $localClassTail = basename(str_replace('\\','/',$localClass));
+        $localClassTail = basename(str_replace('\\','/', $localClass));
 
-        foreach($withHasManys as $depSeq) {
+        foreach ($withHasManys as $depSeq) {
             $dep = $depSeq[0];
             $depClass = $hasManys[$dep];
             $localNameInDep = $localClassTail;
@@ -155,18 +155,18 @@ class EagerLoadedDataList extends DataList{
                 'remoteField' => $depKey,
                 'map' => [],
             ];
-            $result = DataObject::get($depClass)->filter($depKey,$data);
-            if(count($depSeq)>1){
+            $result = DataObject::get($depClass)->filter($depKey, $data);
+            if (count($depSeq)>1) {
                 $result = $result
-                    ->with(implode('.',array_slice($depSeq,1)));
+                    ->with(implode('.', array_slice($depSeq, 1)));
             }
 
             $collection = [];
 
-            foreach($data as $localRecordID){
+            foreach ($data as $localRecordID) {
                 $collection[$localRecordID] = [];
             }
-            foreach($result as $depRecord) {
+            foreach ($result as $depRecord) {
 
                 $this->_relatedCache[$depClass][$depRecord->ID] = $depRecord;
                 $collection[$depRecord->$depKey][] = $depRecord->ID;
@@ -182,7 +182,7 @@ class EagerLoadedDataList extends DataList{
         $localClass = $this->dataClass();
         $schema = DataObject::getSchema();
 
-        foreach($withManyManys as $depSeq) {
+        foreach ($withManyManys as $depSeq) {
             $dep = $depSeq[0];
             $depClass = $manyManys[$dep];
 
@@ -194,30 +194,30 @@ class EagerLoadedDataList extends DataList{
             ];
 
             $idsQuery = SQLSelect::create(
-                implode(',',[$component['childField'],$component['parentField']]),
+                implode(',', [$component['childField'], $component['parentField']]),
                 $component['join'],
                 [
-                    $component['parentField'].' IN (' . implode(',',$data).')'
+                    $component['parentField'].' IN (' . implode(',', $data).')'
                 ]
                 )->execute();
 
             $collection = [];
             $relListReverted = [];
-            foreach($idsQuery as $row){
+            foreach ($idsQuery as $row) {
                 $relID = $row[$component['childField']];
                 $localID = $row[$component['parentField']];
-                if(!isset($collection[$localID])) $collection[$localID] = [];
+                if (!isset($collection[$localID])) $collection[$localID] = [];
                 $collection[$localID][] = $relID;
-                $relListReverted[$relID] = 1;//use ids as keys to avoid
+                $relListReverted[$relID] = 1; //use ids as keys to avoid
             }
 
-            $result = DataObject::get($depClass)->filter('ID',array_keys($relListReverted));
-            if(count($depSeq)>1){
+            $result = DataObject::get($depClass)->filter('ID', array_keys($relListReverted));
+            if (count($depSeq)>1) {
                 $result = $result
-                    ->with(implode('.',array_slice($depSeq,1)));
+                    ->with(implode('.', array_slice($depSeq,1)));
             }
 
-            foreach($result as $depRecord) {
+            foreach ($result as $depRecord) {
                 $this->_relatedCache[$depClass][$depRecord->ID] = $depRecord;
             }
 
@@ -231,11 +231,11 @@ class EagerLoadedDataList extends DataList{
 
     public function fulfillEagerRelations(DataObject $item)
     {
-        foreach($this->_relatedMaps['has_one'] as $dep => $depInfo){
+        foreach ($this->_relatedMaps['has_one'] as $dep => $depInfo) {
             $depClass = $depInfo['class'];
-            if(isset($depInfo['map'][$item->ID])) {
+            if (isset($depInfo['map'][$item->ID])) {
                 $depID = $depInfo['map'][$item->ID];
-                if(isset($this->_relatedCache[$depClass][$depID]))
+                if (isset($this->_relatedCache[$depClass][$depID]))
                 {
                     $depRecord = $this->_relatedCache[$depClass][$depID];
                     $item->setComponent($dep, $depRecord);
@@ -243,31 +243,31 @@ class EagerLoadedDataList extends DataList{
             }
         }
 
-        foreach($this->_relatedMaps['has_many'] as $dep => $depInfo){
+        foreach ($this->_relatedMaps['has_many'] as $dep => $depInfo) {
             $depClass = $depInfo['class'];
             $collection = [];
-            if(isset($depInfo['map'][$item->ID])){
-                foreach($depInfo['map'][$item->ID] as $depID){
-                    if(isset($this->_relatedCache[$depClass][$depID]))
+            if (isset($depInfo['map'][$item->ID])) {
+                foreach ($depInfo['map'][$item->ID] as $depID) {
+                    if (isset($this->_relatedCache[$depClass][$depID]))
                     {
                         $depRecord = $this->_relatedCache[$depClass][$depID];
                         $collection[] = $depRecord;
                     }
                 }
             }
-            if(!method_exists($item,'addEagerRelation')) {
+            if (!method_exists($item, 'addEagerRelation')) {
                 throw new \Exception("Model {$item->ClassName} must include Gurucomkz\EagerLoading\EagerLoaderMultiAccessor trait to use eager loading for \$has_many");
             }
             $item->addEagerRelation($dep, $collection);
         }
 
-        foreach($this->_relatedMaps['many_many'] as $dep => $depInfo){
+        foreach ($this->_relatedMaps['many_many'] as $dep => $depInfo) {
             $depClass = $depInfo['class'];
             $collection = [];
-            if(isset($depInfo['map'][$item->ID])){
-                foreach($depInfo['map'][$item->ID] as $depIDlist){
-                    foreach($depIDlist as $depID){
-                        if(isset($this->_relatedCache[$depClass][$depID]))
+            if (isset($depInfo['map'][$item->ID])) {
+                foreach ($depInfo['map'][$item->ID] as $depIDlist) {
+                    foreach ($depIDlist as $depID) {
+                        if (isset($this->_relatedCache[$depClass][$depID]))
                         {
                             $depRecord = $this->_relatedCache[$depClass][$depID];
                             $collection[] = $depRecord;
@@ -275,7 +275,7 @@ class EagerLoadedDataList extends DataList{
                     }
                 }
             }
-            if(!method_exists($item,'addEagerRelation')) {
+            if (!method_exists($item, 'addEagerRelation')) {
                 throw new \Exception("Model {$item->ClassName} must include Gurucomkz\EagerLoading\EagerLoaderMultiAccessor trait to use eager loading for \$many_many");
             }
             $item->addEagerRelation($dep, $collection);
@@ -296,12 +296,12 @@ class EagerLoadedDataList extends DataList{
         }
     }
 
-    private function _prepareCache($all,$selected)
+    private function _prepareCache($all, $selected)
     {
-        foreach($selected as $depSeq) {
+        foreach ($selected as $depSeq) {
             $dep = $depSeq[0];
             $depClass = $all[$dep];
-            if(!isset($this->_relatedCache[$depClass])) { $this->_relatedCache[$depClass] = []; }
+            if (!isset($this->_relatedCache[$depClass])) { $this->_relatedCache[$depClass] = []; }
         }
     }
 
