@@ -17,6 +17,7 @@
     },
     "require-dev": {
         "jdorn/sql-formatter": "1.3.x-dev",
+        "phpunit/php-code-coverage": "dev-4.0-dev as 4.0.4",
         "tractorcow/silverstripe-proxy-db": "^0.1.0"
     },
     "autoload": {
@@ -25,6 +26,12 @@
             "Gurucomkz\\EagerLoading\\Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/elyobo/php-code-coverage.git"
+        }
+    ],
     "extra": {
         "expose": [
             "client"
