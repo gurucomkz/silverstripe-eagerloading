@@ -1,4 +1,4 @@
-<phpunit bootstrap="vendor/silverstripe/framework/tests/bootstrap.php" colors="true">
+<phpunit bootstrap="../vendor/silverstripe/framework/tests/bootstrap.php" colors="true" stopOnFailure="false">
     <testsuite name="Default">
         <directory>tests</directory>
     </testsuite>
@@ -8,6 +8,6 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="./tests/coverage.xml" charset="UTF-8"/>
+        <log type="coverage-html" target="./tests/coverage" charset="UTF-8"/>
     </logging>
 </phpunit>
