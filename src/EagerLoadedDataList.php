@@ -57,6 +57,15 @@ class EagerLoadedDataList extends DataList{
 
     private $relationsPrepared = false;
 
+    private function filterWithList($list)
+    {
+        return array_filter($this->withList,
+            function($dep)use($list) {
+                return array_key_exists($dep[0], $list);
+            }
+        );
+    }
+
     public function prepareEagerRelations() {
         if ($this->relationsPrepared) return;
         $this->relationsPrepared = true;
@@ -65,13 +74,15 @@ class EagerLoadedDataList extends DataList{
         $hasOnes = (array) $config->get('has_one');
         $hasManys = (array) $config->get('has_many');
         $manyManys = (array) $config->get('many_many');
+        $belongsManyManys = (array) $config->get('belongs_many_many');
 
         //collect has_ones
-        $withHasOnes = array_filter($this->withList, function($dep)use($hasOnes) { return array_key_exists($dep[0], $hasOnes); });
-        $withHasManys = array_filter($this->withList, function($dep)use($hasManys) { return array_key_exists($dep[0], $hasManys); });
-        $withManyManys = array_filter($this->withList, function($dep)use($manyManys) { return array_key_exists($dep[0], $manyManys); });
+        $withHasOnes = $this->filterWithList($hasOnes);
+        $withHasManys = $this->filterWithList($hasManys);
+        $withManyManys = $this->filterWithList($manyManys);
+        $withBelongsManyManys = $this->filterWithList($belongsManyManys);
 
-        if (!count($withHasOnes) && !count($withHasManys) && !count($withManyManys)) {
+        if (!count($withHasOnes) && !count($withHasManys) && !count($withManyManys) && !count($withBelongsManyManys)) {
             // do nothing if no matches
             /** @todo report errors */
             return;
@@ -89,6 +100,10 @@ class EagerLoadedDataList extends DataList{
         if (count($withManyManys)) {
             $this->_prepareCache($manyManys, $withManyManys);
             $this->eagerLoadManyMany($data, $manyManys, $withManyManys);
+        }
+        if (count($withBelongsManyManys)) {
+            $this->_prepareCache($belongsManyManys, $withBelongsManyManys);
+            $this->eagerLoadManyMany($data, $belongsManyManys, $withBelongsManyManys);
         }
 
     }

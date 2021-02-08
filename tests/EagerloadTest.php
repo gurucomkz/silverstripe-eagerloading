@@ -70,23 +70,23 @@ class EagerloadTest extends SapphireTest
         $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     }
 
-    // public function testBelongsToManyMany()
-    // {
-    //     $expectedQueries = 4;
-    //     ProxyDBCounterExtension::resetQueries();
-    //     $pre_fetch_count = ProxyDBCounterExtension::getQueriesCount();
+    public function testBelongsToManyMany()
+    {
+        $expectedQueries = 4;
+        ProxyDBCounterExtension::resetQueries();
+        $pre_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
-    //     $music = Music::get()->with('Players');
+        $music = Music::get()->with('Players');
 
-    //     foreach ($music as $genre) {
-    //         $players = $genre->Players()->map()->toArray();
-    //     }
-    //     $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
+        foreach ($music as $genre) {
+            $genre->Players()->map()->toArray();
+        }
+        $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
-    //     // print_r(ProxyDBCounterExtension::getQueries());
+        // print_r(ProxyDBCounterExtension::getQueries());
 
-    //     $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
-    // }
+        $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
+    }
 
     public function test2HasOne()
     {
