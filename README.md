@@ -1,8 +1,11 @@
 # Silverstripe EagerLoading (UNSTABLE)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=main)
+[![Build Status](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/build.png?b=main)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/build-status/main)
+[![Code Coverage](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=main)
 
 Attempt to solve [N+1 problem](https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping) in SilverStripe 4.
 
-Usage: 
+## Usage
 ```php
 MyModelClass::get()->with(['Relation1','Relation2'])->filter(...);
 ```
@@ -12,6 +15,11 @@ This will result in the final DataList to be presented by the `EagerLoadedDataLi
 
 The module takes advantange of `DataList::getGenerator()` to query for and attach the related records only when needed.
 
+## Installation
+```
+composer require gurucomkz/eagerloading
+```
+Every DataObject that has has_one/many_many/belongs_many_many which you wish to have eagerloaded must include `EagerLoaderMultiAccessor` (see below).
 ## Features
 
 ### `$has_one`
@@ -45,3 +53,6 @@ in advance in attempt to speed up the export.
 * Detect 'LIMIT' constraints and load only relevant daya instead of all.
 * for `->with(['RelLevel1.RelLevel2'])` - do not query for `RelLevel1` IDs twice.
 * for `->with(['RelLevel1','RelLevel1.RelLevel2'])` - do not query for `RelLevel1` IDs thrice.
+
+## Reporting Issues
+Please [create an issue](https://github.com/gurucomkz/silverstripe-eagerloading/issues) for any bugs you've found, or features you're missing.
