@@ -10,7 +10,8 @@ use SilverStripe\ORM\Queries\SQLSelect;
  * Replaces DataList when EagerLoading is used. Fetches data when the main query is actually executed.
  * Appends related objects when a DataObject is actually created.
  */
-class EagerLoadedDataList extends DataList{
+class EagerLoadedDataList extends DataList
+{
 
     const ID_LIMIT = 5000;
     public $withList = [];
@@ -28,8 +29,8 @@ class EagerLoadedDataList extends DataList{
             parent::__construct($classOrList->dataClass());
             $this->dataQuery = $classOrList->dataQuery();
         }
-
     }
+
     public $_relatedCache = [];
     public static function cloneFrom(DataList $list)
     {
@@ -59,15 +60,19 @@ class EagerLoadedDataList extends DataList{
 
     private function filterWithList($list)
     {
-        return array_filter($this->withList,
-            function($dep)use($list) {
+        return array_filter(
+            $this->withList,
+            function ($dep) use ($list) {
                 return array_key_exists($dep[0], $list);
             }
         );
     }
 
-    public function prepareEagerRelations() {
-        if ($this->relationsPrepared) return;
+    public function prepareEagerRelations()
+    {
+        if ($this->relationsPrepared) {
+            return;
+        }
         $this->relationsPrepared = true;
         $localClass = $this->dataClass();
         $config = Config::forClass($localClass);
@@ -105,7 +110,6 @@ class EagerLoadedDataList extends DataList{
             $this->_prepareCache($belongsManyManys, $withBelongsManyManys);
             $this->eagerLoadManyMany($data, $belongsManyManys, $withBelongsManyManys);
         }
-
     }
 
     public function eagerLoadHasOne(&$ids, $hasOnes, $withHasOnes)
@@ -119,7 +123,7 @@ class EagerLoadedDataList extends DataList{
             $fields[] = "{$dep}ID";
         }
         $table = Config::forClass($this->dataClass)->get('table_name');
-        $data = new SQLSelect(implode(',', $fields), [$table], ["ID IN (".implode(',', $ids).")"]);
+        $data = new SQLSelect(implode(',', $fields), [$table], ["ID IN (" . implode(',', $ids) . ")"]);
         $data = Utils::EnsureArray($data->execute(), 'ID');
 
         foreach ($withHasOnes as $depSeq) {
@@ -136,12 +140,12 @@ class EagerLoadedDataList extends DataList{
 
             $descriptor['map'] = Utils::extractField($data, $descriptor['localField']);
             $uniqueIDs = array_unique($descriptor['map']);
-            while(count($uniqueIDs)) {
-                $IDsubset = array_splice($uniqueIDs,0,self::ID_LIMIT);
+            while (count($uniqueIDs)) {
+                $IDsubset = array_splice($uniqueIDs, 0, self::ID_LIMIT);
                 $result = DataObject::get($depClass)->filter('ID', $IDsubset);
                 if (count($depSeq)>1) {
                     $result = $result
-                        ->with(implode('.', array_slice($depSeq,1)));
+                        ->with(implode('.', array_slice($depSeq, 1)));
                 }
 
                 foreach ($result as $depRecord) {
@@ -150,14 +154,13 @@ class EagerLoadedDataList extends DataList{
             }
 
             $this->_relatedMaps['has_one'][$dep] = $descriptor;
-
         }
     }
 
     public function eagerLoadHasMany($data, $hasManys, $withHasManys)
     {
         $localClass = $this->dataClass();
-        $localClassTail = basename(str_replace('\\','/', $localClass));
+        $localClassTail = basename(str_replace('\\', '/', $localClass));
 
         foreach ($withHasManys as $depSeq) {
             $dep = $depSeq[0];
@@ -182,13 +185,11 @@ class EagerLoadedDataList extends DataList{
                 $collection[$localRecordID] = [];
             }
             foreach ($result as $depRecord) {
-
                 $this->_relatedCache[$depClass][$depRecord->ID] = $depRecord;
                 $collection[$depRecord->$depKey][] = $depRecord->ID;
             }
             $descriptor['map'] = $collection;
             $this->_relatedMaps['has_many'][$dep] = $descriptor;
-
         }
     }
 
@@ -212,16 +213,18 @@ class EagerLoadedDataList extends DataList{
                 implode(',', [$component['childField'], $component['parentField']]),
                 $component['join'],
                 [
-                    $component['parentField'].' IN (' . implode(',', $data).')'
+                    $component['parentField'] . ' IN (' . implode(',', $data) . ')'
                 ]
-                )->execute();
+            )->execute();
 
             $collection = [];
             $relListReverted = [];
             foreach ($idsQuery as $row) {
                 $relID = $row[$component['childField']];
                 $localID = $row[$component['parentField']];
-                if (!isset($collection[$localID])) $collection[$localID] = [];
+                if (!isset($collection[$localID])) {
+                    $collection[$localID] = [];
+                }
                 $collection[$localID][] = $relID;
                 $relListReverted[$relID] = 1; //use ids as keys to avoid
             }
@@ -229,7 +232,7 @@ class EagerLoadedDataList extends DataList{
             $result = DataObject::get($depClass)->filter('ID', array_keys($relListReverted));
             if (count($depSeq)>1) {
                 $result = $result
-                    ->with(implode('.', array_slice($depSeq,1)));
+                    ->with(implode('.', array_slice($depSeq, 1)));
             }
 
             foreach ($result as $depRecord) {
@@ -238,11 +241,8 @@ class EagerLoadedDataList extends DataList{
 
             $descriptor['map'] = $collection;
             $this->_relatedMaps['has_many'][$dep] = $descriptor;
-
         }
-
     }
-
 
     public function fulfillEagerRelations(DataObject $item)
     {
@@ -250,8 +250,7 @@ class EagerLoadedDataList extends DataList{
             $depClass = $depInfo['class'];
             if (isset($depInfo['map'][$item->ID])) {
                 $depID = $depInfo['map'][$item->ID];
-                if (isset($this->_relatedCache[$depClass][$depID]))
-                {
+                if (isset($this->_relatedCache[$depClass][$depID])) {
                     $depRecord = $this->_relatedCache[$depClass][$depID];
                     $item->setComponent($dep, $depRecord);
                 }
@@ -263,8 +262,7 @@ class EagerLoadedDataList extends DataList{
             $collection = [];
             if (isset($depInfo['map'][$item->ID])) {
                 foreach ($depInfo['map'][$item->ID] as $depID) {
-                    if (isset($this->_relatedCache[$depClass][$depID]))
-                    {
+                    if (isset($this->_relatedCache[$depClass][$depID])) {
                         $depRecord = $this->_relatedCache[$depClass][$depID];
                         $collection[] = $depRecord;
                     }
@@ -282,8 +280,7 @@ class EagerLoadedDataList extends DataList{
             if (isset($depInfo['map'][$item->ID])) {
                 foreach ($depInfo['map'][$item->ID] as $depIDlist) {
                     foreach ($depIDlist as $depID) {
-                        if (isset($this->_relatedCache[$depClass][$depID]))
-                        {
+                        if (isset($this->_relatedCache[$depClass][$depID])) {
                             $depRecord = $this->_relatedCache[$depClass][$depID];
                             $collection[] = $depRecord;
                         }
@@ -295,7 +292,6 @@ class EagerLoadedDataList extends DataList{
             }
             $item->addEagerRelation($dep, $collection);
         }
-
     }
     /**
      * Returns a generator for this DataList
@@ -316,10 +312,9 @@ class EagerLoadedDataList extends DataList{
         foreach ($selected as $depSeq) {
             $dep = $depSeq[0];
             $depClass = $all[$dep];
-            if (!isset($this->_relatedCache[$depClass])) { $this->_relatedCache[$depClass] = []; }
+            if (!isset($this->_relatedCache[$depClass])) {
+                $this->_relatedCache[$depClass] = [];
+            }
         }
     }
-
-
-
 }

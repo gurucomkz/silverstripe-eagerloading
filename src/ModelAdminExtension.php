@@ -5,7 +5,8 @@ namespace Gurucomkz\EagerLoading;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 
-class ModelAdminExtension extends Extension {
+class ModelAdminExtension extends Extension
+{
 
     /**
      * Adds Data manipulator for eagerloading

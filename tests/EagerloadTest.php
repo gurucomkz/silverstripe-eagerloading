@@ -140,5 +140,4 @@ class EagerloadTest extends SapphireTest
 
         $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     }
-
 }

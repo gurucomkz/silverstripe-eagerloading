@@ -17,7 +17,7 @@ class ProxyDBCounterExtension extends Extension
      *
      * @var array
      */
-    protected static $queries = array();
+    protected static $queries = [];
 
 
     public function updateProxy(ProxyGenerator &$proxy)
@@ -27,7 +27,7 @@ class ProxyDBCounterExtension extends Extension
 
             // The first argument is always the sql query
             $sql = $args[0];
-            $parameters = isset($args[2]) ? $args[2] : array();
+            $parameters = isset($args[2]) ? $args[2] : [];
 
             // Sql can be an array
             // TODO: verify if it's still the case in SS4
@@ -45,10 +45,10 @@ class ProxyDBCounterExtension extends Extension
             // Sometimes, ugly spaces are there
             $sql = preg_replace('/[[:blank:]]+/', ' ', trim($sql));
 
-            self::$queries[] = array(
+            self::$queries[] = [
                 'query' => $sql,
                 'rows' => $handle ? $handle->numRecords() : null,
-            );
+            ];
             // echo "\nQuery: $sql\n";
 
             return $handle;
@@ -72,5 +72,4 @@ class ProxyDBCounterExtension extends Extension
     {
         return count(self::$queries);
     }
-
 }

@@ -37,18 +37,21 @@ class GridFieldEagerLoadManipulator implements GridField_DataManipulator
         if (in_array('Export to CSV', $vars)) {
             $export_fields = $config->get('export_fields');
             if ($export_fields) {
-                $export_eager = [];
-                foreach ($export_fields as $field=>$_title) {
+                foreach ($export_fields as $field => $_title) {
                     $parts = explode('.', $field);
-                    if (count($parts) < 2) continue;
-                    $main = implode('.', array_slice($parts,0,-1));
+                    if (count($parts) < 2) {
+                        continue;
+                    }
+                    $main = implode('.', array_slice($parts, 0, -1));
                     if (!in_array($main, $eager)) {
                         $eager[] = $main;
                     }
                 }
             }
         }
-        if ($eager) return $dataList->with($eager);
+        if ($eager) {
+            return $dataList->with($eager);
+        }
         return $dataList;
     }
 }
