@@ -271,7 +271,7 @@ class EagerLoadedDataList extends DataList
             if (!method_exists($item, 'addEagerRelation')) {
                 throw new \Exception(
                     "Model {$item->ClassName} must include " .
-                    get_class(EagerLoaderMultiAccessor::class) .
+                    EagerLoaderMultiAccessor::class .
                     " trait to use eager loading for \$has_many"
                 );
             }
@@ -294,7 +294,7 @@ class EagerLoadedDataList extends DataList
             if (!method_exists($item, 'addEagerRelation')) {
                 throw new \Exception(
                     "Model {$item->ClassName} must include " .
-                    get_class(EagerLoaderMultiAccessor::class) .
+                    EagerLoaderMultiAccessor::class .
                     " trait to use eager loading for \$has_many"
                 );
             }
