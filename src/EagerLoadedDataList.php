@@ -15,6 +15,7 @@ class EagerLoadedDataList extends DataList
 
     const ID_LIMIT = 5000;
     public $withList = [];
+    public $withListOriginal = [];
     public $eagerLoadingRelatedMaps = [
         'has_one' => [],
         'has_many' => [],
@@ -115,8 +116,6 @@ class EagerLoadedDataList extends DataList
 
     public function eagerLoadHasOne(&$ids, $hasOnes, $withHasOnes)
     {
-        $schema = DataObject::getSchema();
-
         //collect required IDS
         $fields = ['ID'];
         foreach ($withHasOnes as $depSeq) {
