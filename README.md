@@ -22,13 +22,15 @@ composer require gurucomkz/eagerloading
 Every DataObject that has has_one/many_many/belongs_many_many which you wish to have eagerloaded must include `EagerLoaderMultiAccessor` (see below).
 ## Features
 
-### `$has_one`
+* [Using with $has_one / $belongs_to](docs/en/Using_With_HasOne.md)
+* [Using with $has_many / $many_many / $belongs_many_many](docs/en/Using_With_HasMany.md)
+* [Boosting GridField output](docs/en/Boosting_GridField.md)
+* [Boosting CSV export](docs/en/Boosting_CSV_Export.md)
 
-Out of the box - no changes needed.
+Read the docs for full explanation.
+## Quick start
 
-### `$has_many`, `$many_many`, `$belongs_meny_many`
-
-Add the following trait to all your models to use `$has_many`, `$many_many`, `$belongs_meny_many`:
+### 1. Add the following trait to all your models to use `$has_many`, `$many_many`, `$belongs_meny_many`:
 ```php
 class MyClass extends DataObject {
     use Gurucomkz\EagerLoading\EagerLoaderMultiAccessor;
@@ -37,20 +39,22 @@ class MyClass extends DataObject {
 }
 ```
 
-This trait declares `__call()` method necessary for accessing the eager-loaded data.
+If you have your own `__call()` read [Using with $has_many/$many_many](docs/en/Using_With_HasMany.md).
 
-If you have your own `__call()`, please put the contents of `EagerLoaderMultiAccessor::__call()` into it (traits do not override already declared methods).
+### 2. Declare `private static $eager_loading` to boost ModelAdmin's GridField output.
 
-If the trait is not included, an exception will be thrown on attempt to use `$has_many`, `$many_many` or `$belongs_meny_many`.
-## Admin GridField Eager Loading
-
-You can declare `private static $eager_loading` in your model listing to leverage the feature in the ModelAdmin's GridField output.
-
-Additionally, it tries to detect the fact that you are doing the CSV Export and scans the `$export_fields` for suitable relations and loads them
-in advance in attempt to speed up the export.
-
+```php
+class YourClass extends DataObject
+{
+    private static $eager_loading = [
+        'Relation1',
+        'Relation1.Relation4',
+        'Relation2',
+        'Relation3',
+    ];
+}
+```
 ## TODO
-* Detect 'LIMIT' constraints and load only relevant daya instead of all.
 * for `->with(['RelLevel1.RelLevel2'])` - do not query for `RelLevel1` IDs twice.
 * for `->with(['RelLevel1','RelLevel1.RelLevel2'])` - do not query for `RelLevel1` IDs thrice.
 
