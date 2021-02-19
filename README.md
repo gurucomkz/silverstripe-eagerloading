@@ -1,4 +1,4 @@
-# Silverstripe EagerLoading (UNSTABLE)
+# Silverstripe EagerLoading
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/build.png?b=master)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/build-status/master)
 [![Code Coverage](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=master)
