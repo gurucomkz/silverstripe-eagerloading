@@ -15,7 +15,7 @@ class EagerLoadedDataList extends DataList
 
     const ID_LIMIT = 5000;
     public $withList = [];
-    public $_relatedMaps = [
+    public $eagerLoadingRelatedMaps = [
         'has_one' => [],
         'has_many' => [],
         'many_many' => [],
@@ -31,13 +31,13 @@ class EagerLoadedDataList extends DataList
         }
     }
 
-    public $_relatedCache = [];
+    public $eagerLoadingRelatedCache = [];
     public static function cloneFrom(DataList $list)
     {
         $clone = new EagerLoadedDataList($list);
 
         $clone->withList = $list->withList;
-        $clone->_relatedCache = $list->_relatedCache;
+        $clone->eagerLoadingRelatedCache = $list->eagerLoadingRelatedCache;
         return $clone;
     }
 
@@ -95,19 +95,19 @@ class EagerLoadedDataList extends DataList
 
         $data = $this->column('ID');
         if (count($withHasOnes)) {
-            $this->_prepareCache($hasOnes, $withHasOnes);
+            $this->eagerLoadingPrepareCache($hasOnes, $withHasOnes);
             $this->eagerLoadHasOne($data, $hasOnes, $withHasOnes);
         }
         if (count($withHasManys)) {
-            $this->_prepareCache($hasManys, $withHasManys);
+            $this->eagerLoadingPrepareCache($hasManys, $withHasManys);
             $this->eagerLoadHasMany($data, $hasManys, $withHasManys);
         }
         if (count($withManyManys)) {
-            $this->_prepareCache($manyManys, $withManyManys);
+            $this->eagerLoadingPrepareCache($manyManys, $withManyManys);
             $this->eagerLoadManyMany($data, $manyManys, $withManyManys);
         }
         if (count($withBelongsManyManys)) {
-            $this->_prepareCache($belongsManyManys, $withBelongsManyManys);
+            $this->eagerLoadingPrepareCache($belongsManyManys, $withBelongsManyManys);
             $this->eagerLoadManyMany($data, $belongsManyManys, $withBelongsManyManys);
         }
     }
@@ -149,11 +149,11 @@ class EagerLoadedDataList extends DataList
                 }
 
                 foreach ($result as $depRecord) {
-                    $this->_relatedCache[$depClass][$depRecord->ID] = $depRecord;
+                    $this->eagerLoadingRelatedCache[$depClass][$depRecord->ID] = $depRecord;
                 }
             }
 
-            $this->_relatedMaps['has_one'][$dep] = $descriptor;
+            $this->eagerLoadingRelatedMaps['has_one'][$dep] = $descriptor;
         }
     }
 
@@ -185,11 +185,11 @@ class EagerLoadedDataList extends DataList
                 $collection[$localRecordID] = [];
             }
             foreach ($result as $depRecord) {
-                $this->_relatedCache[$depClass][$depRecord->ID] = $depRecord;
+                $this->eagerLoadingRelatedCache[$depClass][$depRecord->ID] = $depRecord;
                 $collection[$depRecord->$depKey][] = $depRecord->ID;
             }
             $descriptor['map'] = $collection;
-            $this->_relatedMaps['has_many'][$dep] = $descriptor;
+            $this->eagerLoadingRelatedMaps['has_many'][$dep] = $descriptor;
         }
     }
 
@@ -236,59 +236,67 @@ class EagerLoadedDataList extends DataList
             }
 
             foreach ($result as $depRecord) {
-                $this->_relatedCache[$depClass][$depRecord->ID] = $depRecord;
+                $this->eagerLoadingRelatedCache[$depClass][$depRecord->ID] = $depRecord;
             }
 
             $descriptor['map'] = $collection;
-            $this->_relatedMaps['has_many'][$dep] = $descriptor;
+            $this->eagerLoadingRelatedMaps['has_many'][$dep] = $descriptor;
         }
     }
 
     public function fulfillEagerRelations(DataObject $item)
     {
-        foreach ($this->_relatedMaps['has_one'] as $dep => $depInfo) {
+        foreach ($this->eagerLoadingRelatedMaps['has_one'] as $dep => $depInfo) {
             $depClass = $depInfo['class'];
             if (isset($depInfo['map'][$item->ID])) {
                 $depID = $depInfo['map'][$item->ID];
-                if (isset($this->_relatedCache[$depClass][$depID])) {
-                    $depRecord = $this->_relatedCache[$depClass][$depID];
+                if (isset($this->eagerLoadingRelatedCache[$depClass][$depID])) {
+                    $depRecord = $this->eagerLoadingRelatedCache[$depClass][$depID];
                     $item->setComponent($dep, $depRecord);
                 }
             }
         }
 
-        foreach ($this->_relatedMaps['has_many'] as $dep => $depInfo) {
+        foreach ($this->eagerLoadingRelatedMaps['has_many'] as $dep => $depInfo) {
             $depClass = $depInfo['class'];
             $collection = [];
             if (isset($depInfo['map'][$item->ID])) {
                 foreach ($depInfo['map'][$item->ID] as $depID) {
-                    if (isset($this->_relatedCache[$depClass][$depID])) {
-                        $depRecord = $this->_relatedCache[$depClass][$depID];
+                    if (isset($this->eagerLoadingRelatedCache[$depClass][$depID])) {
+                        $depRecord = $this->eagerLoadingRelatedCache[$depClass][$depID];
                         $collection[] = $depRecord;
                     }
                 }
             }
             if (!method_exists($item, 'addEagerRelation')) {
-                throw new \Exception("Model {$item->ClassName} must include Gurucomkz\EagerLoading\EagerLoaderMultiAccessor trait to use eager loading for \$has_many");
+                throw new \Exception(
+                    "Model {$item->ClassName} must include " .
+                    get_class(EagerLoaderMultiAccessor::class) .
+                    " trait to use eager loading for \$has_many"
+                );
             }
             $item->addEagerRelation($dep, $collection);
         }
 
-        foreach ($this->_relatedMaps['many_many'] as $dep => $depInfo) {
+        foreach ($this->eagerLoadingRelatedMaps['many_many'] as $dep => $depInfo) {
             $depClass = $depInfo['class'];
             $collection = [];
             if (isset($depInfo['map'][$item->ID])) {
                 foreach ($depInfo['map'][$item->ID] as $depIDlist) {
                     foreach ($depIDlist as $depID) {
-                        if (isset($this->_relatedCache[$depClass][$depID])) {
-                            $depRecord = $this->_relatedCache[$depClass][$depID];
+                        if (isset($this->eagerLoadingRelatedCache[$depClass][$depID])) {
+                            $depRecord = $this->eagerLoadingRelatedCache[$depClass][$depID];
                             $collection[] = $depRecord;
                         }
                     }
                 }
             }
             if (!method_exists($item, 'addEagerRelation')) {
-                throw new \Exception("Model {$item->ClassName} must include Gurucomkz\EagerLoading\EagerLoaderMultiAccessor trait to use eager loading for \$many_many");
+                throw new \Exception(
+                    "Model {$item->ClassName} must include " .
+                    get_class(EagerLoaderMultiAccessor::class) .
+                    " trait to use eager loading for \$has_many"
+                );
             }
             $item->addEagerRelation($dep, $collection);
         }
@@ -307,13 +315,13 @@ class EagerLoadedDataList extends DataList
         }
     }
 
-    private function _prepareCache($all, $selected)
+    private function eagerLoadingPrepareCache($all, $selected)
     {
         foreach ($selected as $depSeq) {
             $dep = $depSeq[0];
             $depClass = $all[$dep];
-            if (!isset($this->_relatedCache[$depClass])) {
-                $this->_relatedCache[$depClass] = [];
+            if (!isset($this->eagerLoadingRelatedCache[$depClass])) {
+                $this->eagerLoadingRelatedCache[$depClass] = [];
             }
         }
     }

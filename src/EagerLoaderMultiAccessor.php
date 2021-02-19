@@ -20,14 +20,14 @@ trait EagerLoaderMultiAccessor
         return parent::__call($method, $arguments);
     }
 
-    public $_eagerLoadingCache = [];
+    public $eagerLoadingCache = [];
 
     public function addEagerRelation($relationName, $content)
     {
-        if (!isset($this->_eagerLoadingCache)) {
-            $this->_eagerLoadingCache = [];
+        if (!isset($this->eagerLoadingCache)) {
+            $this->eagerLoadingCache = [];
         }
-        $this->_eagerLoadingCache[$relationName] = ArrayList::create($content);
+        $this->eagerLoadingCache[$relationName] = ArrayList::create($content);
     }
 
     /**
@@ -39,10 +39,10 @@ trait EagerLoaderMultiAccessor
      */
     public function tryEagerLoadingRelation($method)
     {
-        if (!isset($this->_eagerLoadingCache[$method])) {
+        if (!isset($this->eagerLoadingCache[$method])) {
             return null;
         }
 
-        return $this->_eagerLoadingCache[$method];
+        return $this->eagerLoadingCache[$method];
     }
 }

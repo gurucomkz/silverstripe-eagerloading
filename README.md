@@ -1,7 +1,7 @@
-# Silverstripe EagerLoading
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=main)
-[![Build Status](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/build.png?b=main)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/build-status/main)
-[![Code Coverage](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=main)
+# Silverstripe EagerLoading (UNSTABLE)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/build.png?b=master)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/build-status/master)
+[![Code Coverage](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=master)
 
 Attempt to solve [N+1 problem](https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping) in SilverStripe 4.
 
@@ -10,10 +10,10 @@ Attempt to solve [N+1 problem](https://stackoverflow.com/questions/97197/what-is
 MyModelClass::get()->with(['Relation1','Relation2'])->filter(...);
 ```
 
-As you can see, it does not require huge configuration - only one function to be added to the query builder chain : `->with([..relations...])`.
+It does not require huge configuration - only one function to be added to the query builder chain : `->with([..relations...])`.
 This will result in the final DataList to be presented by the `EagerLoadedDataList` class that handles the eager loading.
 
-The module takes advantange of `DataList::getGenerator()` to query for and attach the related records only when needed.
+The module takes advantage of `DataList::getGenerator()` to query for and attach the related records only when needed.
 
 ## Installation
 ```
@@ -46,7 +46,7 @@ If the trait is not included, an exception will be thrown on attempt to use `$ha
 
 You can declare `private static $eager_loading` in your model listing to leverage the feature in the ModelAdmin's GridField output.
 
-Additionally, it tries to detect the fact that you are doing the CSV Export and scans the `$export_fields` for suitable relations and loads them 
+Additionally, it tries to detect the fact that you are doing the CSV Export and scans the `$export_fields` for suitable relations and loads them
 in advance in attempt to speed up the export.
 
 ## TODO
