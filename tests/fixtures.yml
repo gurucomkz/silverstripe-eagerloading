@@ -1,3 +1,10 @@
+Gurucomkz\EagerLoading\Tests\Models\Drink:
+  fanta:
+    Title: Fanta
+  coke:
+    Title: Coka-Cola
+  sprite:
+    Title: Sprite
 Gurucomkz\EagerLoading\Tests\Models\Origin:
   canterbury:
     Title: Canterbury
@@ -32,6 +39,7 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
     Listens:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.rap
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
+    Drink: =>Gurucomkz\EagerLoading\Tests\Models\Drink.sprite
   joe:
     Title: Joe
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.crusaders
@@ -39,6 +47,7 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
     Listens:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
+    Drink: =>Gurucomkz\EagerLoading\Tests\Models\Drink.coke
   jack:
     Title: Jack
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
@@ -46,12 +55,14 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
     Listens:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.classic
+    Drink: =>Gurucomkz\EagerLoading\Tests\Models\Drink.coke
   paul:
     Title: Paul
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.hurricanes
     Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
     Listens:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.classic
+    Drink: =>Gurucomkz\EagerLoading\Tests\Models\Drink.fanta
   daniel:
     Title: Daniel
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
@@ -59,6 +70,7 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
     Listens:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
+    Drink: =>Gurucomkz\EagerLoading\Tests\Models\Drink.fanta
   patrik:
     Title: Patrik
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
@@ -67,3 +79,4 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.classic
+    Drink: =>Gurucomkz\EagerLoading\Tests\Models\Drink.sprite

@@ -22,5 +22,6 @@ class Player extends DataObject implements TestOnly
     private static $has_one = [
         'Team' => Team::class,
         'Origin' => Origin::class,
+        'Drink' => Drink::class,
     ];
 }

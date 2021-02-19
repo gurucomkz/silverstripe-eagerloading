@@ -12,15 +12,20 @@ class DataFilterEagerLoadingExtension extends DataExtension
 {
 
     public $withList = [];
+    public $withListOriginal = [];
     public function with($list)
     {
         // return $this->owner;
         if (!isset($this->owner->withList)) {
             $this->owner->withList = [];
         }
+        if (!isset($this->owner->withListOriginal)) {
+            $this->owner->withListOriginal = [];
+        }
         if (!is_array($list)) {
             $list = [$list];
         }
+        $this->owner->withListOriginal = $list;
         $list = array_map(
             function ($e) {
                 return explode('.', $e);

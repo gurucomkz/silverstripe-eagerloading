@@ -2,7 +2,9 @@
 
 namespace Gurucomkz\EagerLoading\Tests;
 
+use Gurucomkz\EagerLoading\EagerLoadingException;
 use Gurucomkz\EagerLoading\ProxyDBCounterExtension;
+use Gurucomkz\EagerLoading\Tests\Models\Drink;
 use Gurucomkz\EagerLoading\Tests\Models\Music;
 use Gurucomkz\EagerLoading\Tests\Models\Origin;
 use Gurucomkz\EagerLoading\Tests\Models\Player;
@@ -19,7 +21,35 @@ class EagerloadTest extends SapphireTest
         Music::class,
         Team::class,
         Player::class,
+        Drink::class,
     ];
+
+    public function testNoTrait()
+    {
+        $this->assertFalse(
+            method_exists(Drink::class, 'addEagerRelation'),
+            'Drink Class should not have "addEagerRelation" method'
+        );
+        try {
+            $drinks = Drink::get()->with('Players')->first();
+            foreach ($drinks as $drink) {
+                $drink->Players()->map()->toArray();
+            }
+        } catch (EagerLoadingException $th) {
+            return;
+        }
+        $this->fail('No EagerLoadingException raised');
+    }
+
+    public function testWrongNames()
+    {
+        try {
+            Drink::get()->with('Bubbles')->first();
+        } catch (EagerLoadingException $th) {
+            return;
+        }
+        $this->fail('No EagerLoadingException raised');
+    }
 
     public function testHasOne()
     {

@@ -37,6 +37,7 @@ class EagerLoadedDataList extends DataList
         $clone = new EagerLoadedDataList($list);
 
         $clone->withList = $list->withList;
+        $clone->withListOriginal = $list->withListOriginal;
         $clone->eagerLoadingRelatedCache = $list->eagerLoadingRelatedCache;
         return $clone;
     }
@@ -88,9 +89,9 @@ class EagerLoadedDataList extends DataList
         $withBelongsManyManys = $this->filterWithList($belongsManyManys);
 
         if (!count($withHasOnes) && !count($withHasManys) && !count($withManyManys) && !count($withBelongsManyManys)) {
-            // do nothing if no matches
-            /** @todo report errors */
-            return;
+            throw new EagerLoadingException(
+                "Invalid names supplied for ->with(" . implode(', ', $this->withListOriginal) . ")"
+            );
         }
 
         $data = $this->column('ID');
@@ -135,8 +136,6 @@ class EagerLoadedDataList extends DataList
                 'localField' => "{$dep}ID",
                 'map' => [],
             ];
-
-            $component = $schema->hasOneComponent($this->dataClass, $dep);
 
             $descriptor['map'] = Utils::extractField($data, $descriptor['localField']);
             $uniqueIDs = array_unique($descriptor['map']);
@@ -269,7 +268,7 @@ class EagerLoadedDataList extends DataList
                 }
             }
             if (!method_exists($item, 'addEagerRelation')) {
-                throw new \Exception(
+                throw new EagerLoadingException(
                     "Model {$item->ClassName} must include " .
                     EagerLoaderMultiAccessor::class .
                     " trait to use eager loading for \$has_many"
@@ -292,10 +291,10 @@ class EagerLoadedDataList extends DataList
                 }
             }
             if (!method_exists($item, 'addEagerRelation')) {
-                throw new \Exception(
+                throw new EagerLoadingException(
                     "Model {$item->ClassName} must include " .
                     EagerLoaderMultiAccessor::class .
-                    " trait to use eager loading for \$has_many"
+                    " trait to use eager loading for \$many_many"
                 );
             }
             $item->addEagerRelation($dep, $collection);
