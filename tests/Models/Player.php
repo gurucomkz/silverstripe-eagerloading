@@ -24,4 +24,16 @@ class Player extends DataObject implements TestOnly
         'Origin' => Origin::class,
         'Drink' => Drink::class,
     ];
+
+    private static $export_fields = [
+        'ID' => 'ID',
+        'Title' => 'Title',
+        'Team.Title' => 'Team',
+        'Origin.Title' => 'Origin',
+    ];
+
+    private static $eager_loading = [
+        'Listens',
+        'Origin',
+    ];
 }

@@ -2,10 +2,11 @@
 
 namespace Gurucomkz\EagerLoading;
 
+use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 
-class ModelAdminExtension extends Extension
+class ModelAdminExtension extends LeftAndMainExtension
 {
 
     /**

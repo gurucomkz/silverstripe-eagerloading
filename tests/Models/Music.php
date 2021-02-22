@@ -17,4 +17,9 @@ class Music extends DataObject implements TestOnly
     private static $belongs_many_many = [
         'Players' => Player::class,
     ];
+
+    private static $export_fields = [
+        'ID' => 'ID',
+        'Title' => 'Title',
+    ];
 }

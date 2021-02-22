@@ -35,7 +35,7 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
   john:
     Title: John
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.hurricanes
-    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.canterbury
     Listens:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.rap
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
@@ -43,7 +43,7 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
   joe:
     Title: Joe
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.crusaders
-    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.canterbury
     Listens:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
@@ -59,7 +59,7 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
   paul:
     Title: Paul
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.hurricanes
-    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.auckland
     Listens:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.classic
     Drink: =>Gurucomkz\EagerLoading\Tests\Models\Drink.fanta
@@ -74,9 +74,21 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
   patrik:
     Title: Patrik
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
-    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.wellington
+    Origin: =>Gurucomkz\EagerLoading\Tests\Models\Origin.auckland
     Listens:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.rnb
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.pop
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.classic
     Drink: =>Gurucomkz\EagerLoading\Tests\Models\Drink.sprite
+
+SilverStripe\Security\Member:
+  admin:
+    FirstName: admin
+SilverStripe\Security\Group:
+  admin:
+    Title: Admin
+    Members: =>SilverStripe\Security\Member.admin
+SilverStripe\Security\Permission:
+  admin:
+    Code: ADMIN
+    Group: =>SilverStripe\Security\Group.admin

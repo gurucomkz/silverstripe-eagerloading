@@ -3,7 +3,7 @@
  * A reduced version of LeKoala\DebugBar\Extension\ProxyDBExtension
  */
 
-namespace Gurucomkz\EagerLoading;
+namespace Gurucomkz\EagerLoading\Tests;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DB;

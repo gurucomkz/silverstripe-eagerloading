@@ -12,4 +12,4 @@ Only:
 # Proxy required to count queries
 TractorCow\SilverStripeProxyDB\ProxyDBFactory:
   extensions:
-    - Gurucomkz\EagerLoading\ProxyDBCounterExtension
+    - Gurucomkz\EagerLoading\Tests\ProxyDBCounterExtension

@@ -34,7 +34,8 @@ class GridFieldEagerLoadManipulator implements GridField_DataManipulator
         $config = Config::forClass($class);
         $vars = $gridField->getForm()->getController()->getRequest()->requestVars();
         $eager = $config->get('eager_loading');
-        if (in_array('Export to CSV', $vars)) {
+        $exportString = _t('SilverStripe\\Forms\\GridField\\GridField.CSVEXPORT', 'Export to CSV');
+        if (in_array($exportString, $vars)) {
             $export_fields = $config->get('export_fields');
             if ($export_fields) {
                 foreach ($export_fields as $field => $_title) {

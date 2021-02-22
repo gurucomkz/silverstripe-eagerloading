@@ -3,7 +3,6 @@
 namespace Gurucomkz\EagerLoading\Tests;
 
 use Gurucomkz\EagerLoading\EagerLoadingException;
-use Gurucomkz\EagerLoading\ProxyDBCounterExtension;
 use Gurucomkz\EagerLoading\Tests\Models\Drink;
 use Gurucomkz\EagerLoading\Tests\Models\Music;
 use Gurucomkz\EagerLoading\Tests\Models\Origin;
