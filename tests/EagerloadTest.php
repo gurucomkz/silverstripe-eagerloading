@@ -44,10 +44,9 @@ class EagerloadTest extends SapphireTest
     {
         try {
             Drink::get()->with('Bubbles')->first();
-        } catch (EagerLoadingException $th) {
-            return;
+        } catch (\Exception $th) {
+            $this->fail('Wrong names should fail silently');
         }
-        $this->fail('No EagerLoadingException raised');
     }
 
     public function testHasOne()

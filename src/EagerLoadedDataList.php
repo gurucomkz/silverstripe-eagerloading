@@ -90,9 +90,9 @@ class EagerLoadedDataList extends DataList
         $withBelongsManyManys = $this->filterWithList($belongsManyManys);
 
         if (!count($withHasOnes) && !count($withHasManys) && !count($withManyManys) && !count($withBelongsManyManys)) {
-            throw new EagerLoadingException(
-                "Invalid names supplied for ->with(" . implode(', ', $this->withListOriginal) . ")"
-            );
+            // Injector::inst()->get(LoggerInterface::class)
+            // ->debug("Invalid names supplied for ->with(" . implode(', ', $this->withListOriginal) . ")");
+            return;
         }
 
         $data = $this->column('ID');
