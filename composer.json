@@ -19,6 +19,7 @@
         "phpunit/phpunit": "^5.7",
         "jdorn/sql-formatter": "1.3.x-dev",
         "phpunit/php-code-coverage": "dev-4.0-dev as 4.0.4",
+        "silverstripe/admin": "^1.6",
         "tractorcow/silverstripe-proxy-db": "^0.1.0"
     },
     "autoload": {
