@@ -120,10 +120,10 @@ class EagerLoadedDataList extends DataList
         $fields = ['ID'];
         foreach ($withHasOnes as $depSeq) {
             $dep = $depSeq[0];
-            $fields[] = "{$dep}ID";
+            $fields[] = "\"{$dep}ID\"";
         }
         $table = Config::forClass($this->dataClass)->get('table_name');
-        $data = new SQLSelect(implode(',', $fields), [$table], ["ID IN (" . implode(',', $ids) . ")"]);
+        $data = new SQLSelect($fields, '"' . $table . '"', ['"ID" IN (' . implode(',', $ids) . ')']);
         $data = Utils::EnsureArray($data->execute(), 'ID');
 
         foreach ($withHasOnes as $depSeq) {
@@ -208,10 +208,13 @@ class EagerLoadedDataList extends DataList
             ];
 
             $idsQuery = SQLSelect::create(
-                implode(',', [$component['childField'], $component['parentField']]),
-                $component['join'],
                 [
-                    $component['parentField'] . ' IN (' . implode(',', $data) . ')'
+                    '"' . $component['childField'] . '"',
+                    '"' . $component['parentField'] . '"',
+                ],
+                '"' . $component['join'] . '"',
+                [
+                    '"' . $component['parentField'] . '" IN (' . implode(',', $data) . ')'
                 ]
             )->execute();
 
