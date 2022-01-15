@@ -163,7 +163,13 @@ class EagerLoadedDataList extends DataList
         foreach ($withHasManys as $depSeq) {
             $dep = $depSeq[0];
             $depClass = $hasManys[$dep];
-            $localNameInDep = $localClassTail;
+            if (false !== strpos($depClass, '.')) {
+                $dcSplit = explode('.', $depClass, 2);
+                $depClass = $dcSplit[0];
+                $localNameInDep = $dcSplit[1];
+            } else {
+                $localNameInDep = $localClassTail;
+            }
             $depKey = "{$localNameInDep}ID";
             $descriptor = [
                 'class' => $depClass,
