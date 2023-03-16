@@ -29,7 +29,7 @@ class GridFieldEagerLoadManipulator implements GridField_DataManipulator
      */
     public function getManipulatedData(GridField $gridField, SS_List $dataList)
     {
-        /** @var DataList $dataList */
+        /** @var DataList|DataFilterEagerLoadingExtension $dataList */
         $class = $dataList->dataClass();
         $config = Config::forClass($class);
         $vars = $gridField->getForm()->getController()->getRequest()->requestVars();
