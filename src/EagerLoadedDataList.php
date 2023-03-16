@@ -209,16 +209,20 @@ class EagerLoadedDataList extends DataList
             $component = $schema->manyManyComponent($localClass, $dep);
 
             $descriptor = [
-                'class' => $depClass,
+                'class' => $depClass['through'] ?? $depClass,
                 'map' => [],
             ];
+
+            $table = isset($depClass['through'])
+                ? DataObject::getSchema()->tableName($depClass['through'])
+                : $component['join'];
 
             $idsQuery = SQLSelect::create(
                 [
                     '"' . $component['childField'] . '"',
                     '"' . $component['parentField'] . '"',
                 ],
-                '"' . $component['join'] . '"',
+                '"' . $table . '"',
                 [
                     '"' . $component['parentField'] . '" IN (' . implode(',', $data) . ')'
                 ]
@@ -236,14 +240,18 @@ class EagerLoadedDataList extends DataList
                 $relListReverted[$relID] = 1; //use ids as keys to avoid
             }
 
-            $result = DataObject::get($depClass)->filter('ID', array_keys($relListReverted));
-            if (count($depSeq)>1) {
-                $result = $result
-                    ->with(implode('.', array_slice($depSeq, 1)));
-            }
+            if ($relListReverted) {
+                $depClass = $depClass['through'] ?? $depClass;
 
-            foreach ($result as $depRecord) {
-                $this->eagerLoadingRelatedCache[$depClass][$depRecord->ID] = $depRecord;
+                $result = DataObject::get($depClass)->filter('ID', array_keys($relListReverted));
+                if (count($depSeq)>1) {
+                    $result = $result
+                        ->with(implode('.', array_slice($depSeq, 1)));
+                }
+
+                foreach ($result as $depRecord) {
+                    $this->eagerLoadingRelatedCache[$depClass][$depRecord->ID] = $depRecord;
+                }
             }
 
             $descriptor['map'] = $collection;
@@ -327,6 +335,7 @@ class EagerLoadedDataList extends DataList
         foreach ($selected as $depSeq) {
             $dep = $depSeq[0];
             $depClass = $all[$dep];
+            $depClass = $depClass['through'] ?? $depClass;
             if (!isset($this->eagerLoadingRelatedCache[$depClass])) {
                 $this->eagerLoadingRelatedCache[$depClass] = [];
             }
