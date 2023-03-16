@@ -12,4 +12,8 @@
             <html outputDirectory="./tests/coverage" />
         </report>
     </coverage>
+    <php>
+        <!-- for early initialisation in local mode see `.env.phpunit` -->
+        <env name="SS_DATABASE_CHOOSE_NAME" value="true" />
+    </php>
 </phpunit>
