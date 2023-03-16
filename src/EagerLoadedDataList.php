@@ -122,7 +122,7 @@ class EagerLoadedDataList extends DataList
             $dep = $depSeq[0];
             $fields[] = "\"{$dep}ID\"";
         }
-        $table = Config::forClass($this->dataClass)->get('table_name');
+        $table = DataObject::getSchema()->tableName($this->dataClass);
         $data = new SQLSelect($fields, '"' . $table . '"', ['"ID" IN (' . implode(',', $ids) . ')']);
         $data = Utils::EnsureArray($data->execute(), 'ID');
 
