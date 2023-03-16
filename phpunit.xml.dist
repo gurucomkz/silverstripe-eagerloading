@@ -1,13 +1,15 @@
 <phpunit bootstrap="vendor/silverstripe/framework/tests/bootstrap.php" colors="true" stopOnFailure="false">
-    <testsuite name="Default">
-        <directory>tests</directory>
-    </testsuite>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+    <testsuites>
+        <testsuite name="Default">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <coverage processUncoveredFiles="true">
+        <include>
             <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="coverage-html" target="./tests/coverage" charset="UTF-8"/>
-    </logging>
+        </include>
+        <report>
+            <html outputDirectory="./tests/coverage" />
+        </report>
+    </coverage>
 </phpunit>

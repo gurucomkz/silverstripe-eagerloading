@@ -1,1 +1,6 @@
 tests/coverage
+/vendor
+/resources
+/assets
+/.env
+.phpunit.result.cache
