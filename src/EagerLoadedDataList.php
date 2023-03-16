@@ -315,7 +315,7 @@ class EagerLoadedDataList extends DataList
      */
     public function getGenerator()
     {
-        $query = $this->query()->execute();
+        $query = $this->dataQuery()->execute();
 
         while ($row = $query->record()) {
             yield $this->createDataObject($row);
