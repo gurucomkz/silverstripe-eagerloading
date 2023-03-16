@@ -43,7 +43,8 @@ class EagerloadTest extends SapphireTest
     public function testWrongNames()
     {
         try {
-            Drink::get()->with('Bubbles')->first();
+            $record = Drink::get()->with('Bubbles')->first();
+            $this->assertNotNull($record);
         } catch (\Exception $th) {
             $this->fail('Wrong names should fail silently');
         }

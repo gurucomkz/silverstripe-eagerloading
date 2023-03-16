@@ -1,6 +1,8 @@
 build:
   nodes:
     coverage:
+      services:
+        mariadb: 10
       tests:
         override:
           - command: vendor/bin/phpunit --coverage-clover=coverage.xml
