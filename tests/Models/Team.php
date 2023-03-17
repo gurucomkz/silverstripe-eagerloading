@@ -21,4 +21,11 @@ class Team extends DataObject implements TestOnly
     private static $has_many = [
         'Players' => Player::class,
     ];
+    private static $many_many = [
+        "Supporters" => [
+            'through' => TeamSupporter::class,
+            'from' => 'Team',
+            'to' => 'Supporter',
+        ]
+    ];
 }
