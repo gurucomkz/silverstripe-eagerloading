@@ -1,6 +1,7 @@
 <?php
 namespace Gurucomkz\EagerLoading;
 
+use Exception;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -204,9 +205,31 @@ class EagerLoadedDataList extends DataList
 
         foreach ($withManyManys as $depSeq) {
             $dep = $depSeq[0];
-            $depClass = $manyManys[$dep];
+            $depData = $manyManys[$dep];
 
-            $component = $schema->manyManyComponent($localClass, $dep);
+            if (is_array($depData)) {
+                if (!isset($depData['from']) || !isset($depData['to']) || !isset($depData['through'])) {
+                    throw new Exception(sprintf('Incompatible "many_many through" configuration for %s.%s', $localClass, $dep));
+                }
+                $throughClass = $depData['through'];
+                // determine the target data object
+                $depClass = $schema->hasOneComponent($depData['through'], $depData['to']);
+                if (!$depClass) {
+                    throw new Exception(sprintf('Class %s does not have a $has_one component named', $depData['through'], $depData['to']));
+                }
+
+                $table = DataObject::getSchema()->tableName($throughClass);
+
+                $childField = $depData['to']. 'ID';
+                $parentField = $depData['from']. 'ID';
+            } else {
+                $depClass = $depData;
+                $component = $schema->manyManyComponent($localClass, $dep);
+
+                $table = $component['join'];
+                $childField = $component['childField'];
+                $parentField = $component['parentField'];
+            }
 
             $descriptor = [
                 'class' => $depClass,
@@ -215,20 +238,20 @@ class EagerLoadedDataList extends DataList
 
             $idsQuery = SQLSelect::create(
                 [
-                    '"' . $component['childField'] . '"',
-                    '"' . $component['parentField'] . '"',
+                    '"' . $childField . '"',
+                    '"' . $parentField . '"',
                 ],
-                '"' . $component['join'] . '"',
+                '"' . $table . '"',
                 [
-                    '"' . $component['parentField'] . '" IN (' . implode(',', $data) . ')'
+                    '"' . $parentField . '" IN (' . implode(',', $data) . ')'
                 ]
             )->execute();
 
             $collection = [];
             $relListReverted = [];
             foreach ($idsQuery as $row) {
-                $relID = $row[$component['childField']];
-                $localID = $row[$component['parentField']];
+                $relID = $row[$childField];
+                $localID = $row[$parentField];
                 if (!isset($collection[$localID])) {
                     $collection[$localID] = [];
                 }
@@ -236,18 +259,20 @@ class EagerLoadedDataList extends DataList
                 $relListReverted[$relID] = 1; //use ids as keys to avoid
             }
 
-            $result = DataObject::get($depClass)->filter('ID', array_keys($relListReverted));
-            if (count($depSeq)>1) {
-                $result = $result
-                    ->with(implode('.', array_slice($depSeq, 1)));
-            }
+            if (count($relListReverted)) {
+                $result = DataObject::get($depClass)->filter('ID', array_keys($relListReverted));
+                if (count($depSeq)>1) {
+                    $result = $result
+                        ->with(implode('.', array_slice($depSeq, 1)));
+                }
 
-            foreach ($result as $depRecord) {
-                $this->eagerLoadingRelatedCache[$depClass][$depRecord->ID] = $depRecord;
+                foreach ($result as $depRecord) {
+                    $this->eagerLoadingRelatedCache[$depClass][$depRecord->ID] = $depRecord;
+                }
             }
 
             $descriptor['map'] = $collection;
-            $this->eagerLoadingRelatedMaps['has_many'][$dep] = $descriptor;
+            $this->eagerLoadingRelatedMaps['many_many'][$dep] = $descriptor;
         }
     }
 
@@ -289,13 +314,13 @@ class EagerLoadedDataList extends DataList
             $depClass = $depInfo['class'];
             $collection = [];
             if (isset($depInfo['map'][$item->ID])) {
-                foreach ($depInfo['map'][$item->ID] as $depIDlist) {
-                    foreach ($depIDlist as $depID) {
+                foreach ($depInfo['map'][$item->ID] as $depID) {
+                    // foreach ($depIDlist as $depID) {
                         if (isset($this->eagerLoadingRelatedCache[$depClass][$depID])) {
                             $depRecord = $this->eagerLoadingRelatedCache[$depClass][$depID];
                             $collection[] = $depRecord;
                         }
-                    }
+                    // }
                 }
             }
             if (!method_exists($item, 'addEagerRelation')) {
@@ -327,6 +352,7 @@ class EagerLoadedDataList extends DataList
         foreach ($selected as $depSeq) {
             $dep = $depSeq[0];
             $depClass = $all[$dep];
+            $depClass = $depClass['through'] ?? $depClass;
             if (!isset($this->eagerLoadingRelatedCache[$depClass])) {
                 $this->eagerLoadingRelatedCache[$depClass] = [];
             }

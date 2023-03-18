@@ -81,6 +81,57 @@ Gurucomkz\EagerLoading\Tests\Models\Player:
       - =>Gurucomkz\EagerLoading\Tests\Models\Music.classic
     Drink: =>Gurucomkz\EagerLoading\Tests\Models\Drink.sprite
 
+
+Gurucomkz\EagerLoading\Tests\Models\Supporter:
+  sup1:
+    Title: Supporter 1
+  sup2:
+    Title: Supporter 2
+  sup3:
+    Title: Supporter 3
+  sup4:
+    Title: Supporter 4
+  sup5:
+    Title: Supporter 5
+
+Gurucomkz\EagerLoading\Tests\Models\TeamSupporter:
+  hurricanes:
+    Ranking: 1
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.hurricanes
+    Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup1
+  hurricanes3:
+    Ranking: 3
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.hurricanes
+    Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup3
+  hurricanes5:
+    Ranking: 2
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.hurricanes
+    Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup5
+  crusaders:
+    Ranking: 1
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.crusaders
+    Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup1
+  bears1:
+    Ranking: 1
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
+    Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup1
+  bears2:
+    Ranking: 1
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
+    Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup2
+  bears3:
+    Ranking: 1
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
+    Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup3
+  bears4:
+    Ranking: 1
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
+    Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup4
+  bears5:
+    Ranking: 1
+    Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
+    Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup5
+
 SilverStripe\Security\Member:
   admin:
     FirstName: admin

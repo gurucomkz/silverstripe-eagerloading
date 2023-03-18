@@ -7,7 +7,9 @@ use Gurucomkz\EagerLoading\Tests\Models\Drink;
 use Gurucomkz\EagerLoading\Tests\Models\Music;
 use Gurucomkz\EagerLoading\Tests\Models\Origin;
 use Gurucomkz\EagerLoading\Tests\Models\Player;
+use Gurucomkz\EagerLoading\Tests\Models\Supporter;
 use Gurucomkz\EagerLoading\Tests\Models\Team;
+use Gurucomkz\EagerLoading\Tests\Models\TeamSupporter;
 use SilverStripe\Dev\SapphireTest;
 
 class EagerloadTest extends SapphireTest
@@ -21,6 +23,8 @@ class EagerloadTest extends SapphireTest
         Team::class,
         Player::class,
         Drink::class,
+        Supporter::class,
+        TeamSupporter::class,
     ];
 
     public function testNoTrait()
@@ -82,7 +86,7 @@ class EagerloadTest extends SapphireTest
         $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
     }
 
-    public function testManyMany()
+    public function testManyManyPlain()
     {
         $expectedQueries = 4;
         ProxyDBCounterExtension::resetQueries();
@@ -93,6 +97,38 @@ class EagerloadTest extends SapphireTest
         foreach ($players as $player) {
             $player->Listens()->map()->toArray();
             // print_r($music);
+        }
+        $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
+
+        $this->assertEquals($pre_fetch_count + $expectedQueries, $post_fetch_count);
+    }
+
+    public function testManyManyThrough()
+    {
+        $expectedQueries = 4;
+        ProxyDBCounterExtension::resetQueries();
+        $pre_fetch_count = ProxyDBCounterExtension::getQueriesCount();
+
+        $teams = Team::get()->with('Supporters');
+
+        foreach ($teams as $team) {
+            $supporters = $team->Supporters()->map()->toArray();
+            // print_r(ProxyDBCounterExtension::getQueries());
+            switch($team->Title){
+                case 'The Hurricanes':
+                    $this->assertCount(3, $supporters);
+                    $this->assertTrue(in_array('Supporter 1', $supporters));
+                    $this->assertTrue(in_array('Supporter 3', $supporters));
+                    $this->assertTrue(in_array('Supporter 5', $supporters));
+                    break;
+                case 'The Crusaders':
+                    $this->assertCount(1, $supporters);
+                    $this->assertTrue(in_array('Supporter 1', $supporters));
+                    break;
+                case 'The Bears':
+                    $this->assertCount(5, $supporters);
+                    break;
+            }
         }
         $post_fetch_count = ProxyDBCounterExtension::getQueriesCount();
 
