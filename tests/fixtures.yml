@@ -116,19 +116,19 @@ Gurucomkz\EagerLoading\Tests\Models\TeamSupporter:
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
     Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup1
   bears2:
-    Ranking: 1
+    Ranking: 5
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
     Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup2
   bears3:
-    Ranking: 1
+    Ranking: 4
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
     Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup3
   bears4:
-    Ranking: 1
+    Ranking: 2
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
     Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup4
   bears5:
-    Ranking: 1
+    Ranking: 3
     Team: =>Gurucomkz\EagerLoading\Tests\Models\Team.bears
     Supporter: =>Gurucomkz\EagerLoading\Tests\Models\Supporter.sup5
 

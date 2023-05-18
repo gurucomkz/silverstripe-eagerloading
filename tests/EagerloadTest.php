@@ -117,9 +117,11 @@ class EagerloadTest extends SapphireTest
             switch($team->Title){
                 case 'The Hurricanes':
                     $this->assertCount(3, $supporters);
-                    $this->assertTrue(in_array('Supporter 1', $supporters));
-                    $this->assertTrue(in_array('Supporter 3', $supporters));
-                    $this->assertTrue(in_array('Supporter 5', $supporters));
+                    $this->assertEquals([
+                        'Supporter 1',
+                        'Supporter 5',
+                        'Supporter 3',
+                    ], array_values($supporters));
                     break;
                 case 'The Crusaders':
                     $this->assertCount(1, $supporters);
@@ -127,6 +129,13 @@ class EagerloadTest extends SapphireTest
                     break;
                 case 'The Bears':
                     $this->assertCount(5, $supporters);
+                    $this->assertEquals([
+                        'Supporter 1',
+                        'Supporter 4',
+                        'Supporter 5',
+                        'Supporter 3',
+                        'Supporter 2',
+                    ], array_values($supporters));
                     break;
             }
         }
