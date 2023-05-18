@@ -206,6 +206,7 @@ class EagerLoadedDataList extends DataList
         foreach ($withManyManys as $depSeq) {
             $dep = $depSeq[0];
             $depData = $manyManys[$dep];
+            $sort = [];
 
             if (is_array($depData)) {
                 if (!isset($depData['from']) || !isset($depData['to']) || !isset($depData['through'])) {
@@ -222,6 +223,10 @@ class EagerLoadedDataList extends DataList
 
                 $childField = $depData['to']. 'ID';
                 $parentField = $depData['from']. 'ID';
+
+                if ($defaultSort = Config::inst()->get($throughClass, 'default_sort')) {
+                    $sort[] = $defaultSort;
+                }
             } else {
                 $depClass = $depData;
                 $component = $schema->manyManyComponent($localClass, $dep);
@@ -244,7 +249,8 @@ class EagerLoadedDataList extends DataList
                 '"' . $table . '"',
                 [
                     '"' . $parentField . '" IN (' . implode(',', $data) . ')'
-                ]
+                ],
+                $sort,
             )->execute();
 
             $collection = [];
