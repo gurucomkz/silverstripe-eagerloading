@@ -142,6 +142,7 @@ class EagerLoadedDataList extends DataList
             while (count($uniqueIDs)) {
                 $IDsubset = array_splice($uniqueIDs, 0, self::ID_LIMIT);
                 $result = DataObject::get($depClass)->filter('ID', $IDsubset);
+                $this->extend('onEagerLoadHasOneMany', $result, $data, $depSeq, $withHasOnes);
                 if (count($depSeq)>1) {
                     $result = $result
                         ->with(implode('.', array_slice($depSeq, 1)));
@@ -179,6 +180,7 @@ class EagerLoadedDataList extends DataList
                 'map' => [],
             ];
             $result = DataObject::get($depClass)->filter($depKey, $data);
+            $this->extend('onEagerLoadHasMany', $result, $depKey, $data, $depSeq, $withHasManys);
             if (count($depSeq)>1) {
                 $result = $result
                     ->with(implode('.', array_slice($depSeq, 1)));
@@ -261,6 +263,7 @@ class EagerLoadedDataList extends DataList
 
             if (count($relListReverted)) {
                 $result = DataObject::get($depClass)->filter('ID', array_keys($relListReverted));
+                $this->extend('onEagerLoadManyMany', $result, $data, $depSeq, $withManyManys);
                 if (count($depSeq)>1) {
                     $result = $result
                         ->with(implode('.', array_slice($depSeq, 1)));
