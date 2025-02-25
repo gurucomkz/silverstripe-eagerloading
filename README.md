@@ -1,9 +1,15 @@
-# Silverstripe EagerLoading
+# SilverStripe 4 EagerLoading
+
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/build.png?b=master)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/build-status/master)
 [![Code Coverage](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/gurucomkz/silverstripe-eagerloading/?branch=master)
 
 Attempt to solve [N+1 problem](https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping) in SilverStripe 4.
+
+## Deprecated
+
+SilverStripe 5 [has this feature built-in](https://docs.silverstripe.org/en/5/changelogs/5.1.0/#eager-loading). Please use SilverStripe 5.
+
 
 ## Usage
 ```php
